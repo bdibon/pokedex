@@ -17,7 +17,10 @@ func main() {
 		text := scanner.Text()
 		command, ok := commands[text]
 		if ok {
-			command.Callback()
+			err := command.Callback()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "error: %s\n", err)
+			}
 		} else {
 			fmt.Printf("unknown command: %s\n", text)
 		}

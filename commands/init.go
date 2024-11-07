@@ -29,18 +29,12 @@ func InitCommands() map[string]cliCommand {
 		"map": {
 			"map",
 			"Display the next 20 locations",
-			func() error {
-				// GET https://pokeapi.co/api/v2/location-area/
-				// The response will contain a JSON payload with:
-				//	* a 'next' field that is the next URL to query for the next page
-				// 	* a 'results' field that is an array of 20 location names
-				return nil
-			},
+			mapForward,
 		},
 		"mapb": {
 			"mapb",
 			"Display the previous 20 locations",
-			nil,
+			mapBackward,
 		},
 	}
 	initHelpCommand(commands)

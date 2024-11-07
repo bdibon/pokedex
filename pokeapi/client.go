@@ -25,13 +25,14 @@ func GetLocationAreas(offset, limit int) ([]LocationArea, error) {
 	url := "https://pokeapi.co/api/v2/location-area/" + fmt.Sprintf("?offset=%d&limit=%d", offset, limit)
 	res, err := http.Get(url)
 	if err != nil {
-		return nil, errors.New("getLocationAreas: network error")
+		return nil, errors.New("network error")
 	}
+	defer res.Body.Close()
 
 	var data locationAreaResponse
 	dec := json.NewDecoder(res.Body)
 	if err = dec.Decode(&data); err != nil {
-		return nil, errors.New("getLocationAreas: error decoding response")
+		return nil, errors.New("error decoding response")
 	}
 	return data.Results, nil
 }
