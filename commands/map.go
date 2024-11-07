@@ -34,7 +34,7 @@ func mapForward() error {
 }
 
 func mapBackward() error {
-	if offset < 0 {
+	if offset < 20 {
 		return errors.New("first page of results, cannot go back")
 	}
 	offset -= pagination

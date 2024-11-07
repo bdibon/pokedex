@@ -9,15 +9,15 @@ import (
 )
 
 func main() {
-	commands := commands.InitCommands()
+	cmds := commands.InitCommands()
 
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print("pokedex > ")
 	for scanner.Scan() {
 		text := scanner.Text()
-		command, ok := commands[text]
+		cmd, ok := cmds[text]
 		if ok {
-			err := command.Callback()
+			err := cmd.Callback()
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "error: %s\n", err)
 			}
