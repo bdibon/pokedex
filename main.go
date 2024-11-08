@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bdibon/pokedex/commands"
+	"github.com/bdibon/pokedex/internal/commands"
 )
 
 func main() {

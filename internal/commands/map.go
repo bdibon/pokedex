@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/bdibon/pokedex/pokeapi"
+	"github.com/bdibon/pokedex/internal/pokeapi"
 )
 
 const pagination = 20
