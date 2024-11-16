@@ -28,12 +28,12 @@ func mapBaseCommand(of, pag int) error {
 	return nil
 }
 
-func mapForward() error {
+func mapForward(_ ...string) error {
 	offset += pagination
 	return mapBaseCommand(offset, pagination)
 }
 
-func mapBackward() error {
+func mapBackward(_ ...string) error {
 	if offset < 20 {
 		return errors.New("first page of results, cannot go back")
 	}

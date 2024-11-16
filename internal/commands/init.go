@@ -8,7 +8,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	Callback    func() error
+	Callback    func(arguments ...string) error
 }
 
 func InitCommands() map[string]cliCommand {
@@ -16,7 +16,7 @@ func InitCommands() map[string]cliCommand {
 		"exit": {
 			"exit",
 			"Exit the Pokedex REPL",
-			func() error {
+			func(_ ...string) error {
 				os.Exit(0)
 				return nil
 			},
@@ -36,6 +36,11 @@ func InitCommands() map[string]cliCommand {
 			"Display the previous 20 locations",
 			mapBackward,
 		},
+		"explore": {
+			"explore",
+			"See a list of all the Pokémon in a given area",
+			explore,
+		},
 	}
 	initHelpCommand(commands)
 	return commands
@@ -43,7 +48,7 @@ func InitCommands() map[string]cliCommand {
 
 func initHelpCommand(commands map[string]cliCommand) {
 	helpCommand := commands["help"]
-	helpCommand.Callback = func() error {
+	helpCommand.Callback = func(_ ...string) error {
 		fmt.Printf("\nWelcome to the Pokedex!\nUsage:\n\n")
 		for name, cmd := range commands {
 			fmt.Printf("%s: %s\n", name, cmd.description)

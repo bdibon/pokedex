@@ -11,6 +11,8 @@ import (
 	"github.com/bdibon/pokedex/internal/pokecache"
 )
 
+const baseUrl = "https://pokeapi.co/api/v2/location-area/"
+
 var cache = pokecache.NewCache(5 * time.Second)
 
 type LocationArea result
@@ -27,8 +29,22 @@ type locationAreaResponse struct {
 	Results  []LocationArea `json:"results"`
 }
 
+type Pokemon struct {
+	Name string `json:"name"`
+	Url  string `json:"url"`
+}
+
+type PokemonEncounter struct {
+	Pokemon Pokemon `json:"pokemon"`
+}
+
+type locationAreaDetailsResponse struct {
+	PokemonEncounters []PokemonEncounter `json:"pokemon_encounters"`
+}
+
 func GetLocationAreas(offset, limit int) ([]LocationArea, error) {
-	data, err := getLocationAreasData(offset, limit)
+	url := baseUrl + fmt.Sprintf("?offset=%d&limit=%d", offset, limit)
+	data, err := getDataFromAPI(url)
 	if err != nil {
 		return nil, fmt.Errorf("error retrieving data: %w", err)
 	}
@@ -41,14 +57,27 @@ func GetLocationAreas(offset, limit int) ([]LocationArea, error) {
 	return lar.Results, nil
 }
 
-func getLocationAreasData(offset, limit int) ([]byte, error) {
-	ckey := fmt.Sprintf("location-area-%d-%d", offset, limit)
-	cached, ok := cache.Get(ckey)
+func GetPokemonEncounters(area string) ([]PokemonEncounter, error) {
+	url := "https://pokeapi.co/api/v2/location-area/" + area
+	data, err := getDataFromAPI(url)
+	if err != nil {
+		return nil, fmt.Errorf("error retrieving data: %w", err)
+	}
+
+	var ladr locationAreaDetailsResponse
+	err = json.Unmarshal(data, &ladr)
+	if err != nil {
+		return nil, errors.New("error decoding response")
+	}
+	return ladr.PokemonEncounters, nil
+}
+
+func getDataFromAPI(url string) ([]byte, error) {
+	cached, ok := cache.Get(url)
 	if ok {
 		return cached, nil
 	}
 
-	url := "https://pokeapi.co/api/v2/location-area/" + fmt.Sprintf("?offset=%d&limit=%d", offset, limit)
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, errors.New("network error")
@@ -61,6 +90,6 @@ func getLocationAreasData(offset, limit int) ([]byte, error) {
 			return nil, errors.New("error reading response body")
 		}
 	}
-	cache.Add(ckey, data)
+	cache.Add(url, data)
 	return data, nil
 }
