@@ -9,9 +9,22 @@ import (
 	"github.com/bdibon/pokedex/internal/pokeapi"
 )
 
-const pagination = 20
+func mapCommandsFactory(pagination int) (func(...string) error, func(...string) error) {
+	offset := -pagination
 
-var offset int = -pagination
+	mapForward := func(_ ...string) error {
+		offset += pagination
+		return mapBaseCommand(offset, pagination)
+	}
+	mapBackward := func(_ ...string) error {
+		if offset < 20 {
+			return errors.New("first page of results, cannot go back")
+		}
+		offset -= pagination
+		return mapBaseCommand(offset, pagination)
+	}
+	return mapForward, mapBackward
+}
 
 func mapBaseCommand(of, pag int) error {
 	res, err := pokeapi.GetLocationAreas(of, pag)
@@ -26,17 +39,4 @@ func mapBaseCommand(of, pag int) error {
 	writer.Flush()
 
 	return nil
-}
-
-func mapForward(_ ...string) error {
-	offset += pagination
-	return mapBaseCommand(offset, pagination)
-}
-
-func mapBackward(_ ...string) error {
-	if offset < 20 {
-		return errors.New("first page of results, cannot go back")
-	}
-	offset -= pagination
-	return mapBaseCommand(offset, pagination)
 }

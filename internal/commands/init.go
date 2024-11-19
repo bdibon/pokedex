@@ -12,6 +12,7 @@ type cliCommand struct {
 }
 
 func InitCommands() map[string]cliCommand {
+	mapForward, mapBackward := mapCommandsFactory(20)
 	commands := map[string]cliCommand{
 		"exit": {
 			"exit",
