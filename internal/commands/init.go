@@ -41,6 +41,11 @@ func InitCommands() map[string]cliCommand {
 			"See a list of all the Pokémon in a given area",
 			explore,
 		},
+		"catch": {
+			"catch",
+			"Catch a Pokémon to add it to your Pokédex",
+			catch,
+		},
 	}
 	initHelpCommand(commands)
 	return commands
