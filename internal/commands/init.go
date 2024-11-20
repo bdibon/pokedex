@@ -13,6 +13,11 @@ type cliCommand struct {
 
 func InitCommands() map[string]cliCommand {
 	mapForward, mapBackward := mapCommandsFactory(20)
+
+	pokemonStore := make(PokemonStore)
+	catch := catchCommandFactory(pokemonStore)
+	inspect := inspectCommandFactory(pokemonStore)
+
 	commands := map[string]cliCommand{
 		"exit": {
 			"exit",
@@ -46,6 +51,11 @@ func InitCommands() map[string]cliCommand {
 			"catch",
 			"Catch a Pokémon to add it to your Pokédex",
 			catch,
+		},
+		"inspect": {
+			"inspect",
+			"inspect a Pokémon from your Pokédex",
+			inspect,
 		},
 	}
 	initHelpCommand(commands)

@@ -8,12 +8,19 @@ import (
 	"github.com/bdibon/pokedex/internal/pokeapi"
 )
 
-var Pokedex map[string]pokeapi.Pokemon = make(map[string]pokeapi.Pokemon)
-
 const maxBaseExperience = 608
 const minBaseExperience = 20
 
-func catch(args ...string) error {
+type PokemonStore map[string]pokeapi.Pokemon
+
+func catchCommandFactory(pokemonStore PokemonStore) func(args ...string) error {
+	catchCmd := func(args ...string) error {
+		return catchBaseCommand(pokemonStore, args...)
+	}
+	return catchCmd
+}
+
+func catchBaseCommand(pokemonStore PokemonStore, args ...string) error {
 	if len(args) < 1 {
 		return errors.New("catch command: can't catch the air")
 	}
@@ -29,7 +36,7 @@ func catch(args ...string) error {
 	fmt.Printf("Throwing a pokeball at %s...\n", name)
 	if outcome := throwPokeball(pokemon); outcome {
 		fmt.Printf("%s was caught!\n", name)
-		Pokedex[name] = pokemon
+		pokemonStore[name] = pokemon
 	} else {
 		fmt.Printf("%s escaped!\n", name)
 	}
