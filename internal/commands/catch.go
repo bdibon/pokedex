@@ -14,10 +14,9 @@ const minBaseExperience = 20
 type PokemonStore map[string]pokeapi.Pokemon
 
 func catchCommandFactory(pokemonStore PokemonStore) func(args ...string) error {
-	catchCmd := func(args ...string) error {
+	return func(args ...string) error {
 		return catchBaseCommand(pokemonStore, args...)
 	}
-	return catchCmd
 }
 
 func catchBaseCommand(pokemonStore PokemonStore, args ...string) error {

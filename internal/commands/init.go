@@ -17,6 +17,7 @@ func InitCommands() map[string]cliCommand {
 	pokemonStore := make(PokemonStore)
 	catch := catchCommandFactory(pokemonStore)
 	inspect := inspectCommandFactory(pokemonStore)
+	pokedex := pokedexCommandFactory(pokemonStore)
 
 	commands := map[string]cliCommand{
 		"exit": {
@@ -56,6 +57,11 @@ func InitCommands() map[string]cliCommand {
 			"inspect",
 			"inspect a Pokémon from your Pokédex",
 			inspect,
+		},
+		"pokedex": {
+			"pokedex",
+			"list all Pokémons from your Pokédex",
+			pokedex,
 		},
 	}
 	initHelpCommand(commands)

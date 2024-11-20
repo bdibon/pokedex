@@ -29,10 +29,9 @@ func (p Pokemon) String() string {
 }
 
 func inspectCommandFactory(pokedex PokemonStore) func(...string) error {
-	inspectCommand := func(args ...string) error {
+	return func(args ...string) error {
 		return inspectBaseCommand(pokedex, args...)
 	}
-	return inspectCommand
 }
 
 func inspectBaseCommand(pokedex PokemonStore, args ...string) error {
